@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {z} from 'zod';import {verifyCode} from '@/lib/auth';
+export async function POST(req:Request){const v=z.object({email:z.string().email(),code:z.string().regex(/^\d{6}$/)}).safeParse(await req.json());if(!v.success)return NextResponse.json({error:'Enter the six-digit code.'},{status:400});const u=await verifyCode(v.data.email.toLowerCase(),v.data.code);return u?NextResponse.json({ok:true}):NextResponse.json({error:'That code is invalid or expired.'},{status:401});}

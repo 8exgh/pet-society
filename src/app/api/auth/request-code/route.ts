@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {z} from 'zod';import {sendCode} from '@/lib/auth';
+export async function POST(req:Request){const v=z.object({email:z.string().email().transform(v=>v.toLowerCase().trim())}).safeParse(await req.json());if(!v.success)return NextResponse.json({error:'Enter a valid email address.'},{status:400});const devCode=await sendCode(v.data.email);return NextResponse.json({ok:true,...(devCode?{devCode}: {})});}
